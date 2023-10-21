@@ -1,0 +1,565 @@
+basePath: /api/v1
+definitions:
+  model.Canteen:
+    properties:
+      canteen_name:
+        type: string
+      contact:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: integer
+      image_path:
+        type: string
+      location:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  model.CanteenData:
+    properties:
+      canteen_name:
+        type: string
+      contact:
+        type: string
+      image_path:
+        type: string
+      location:
+        type: string
+    type: object
+  model.CanteenMenu:
+    properties:
+      canteen_id:
+        type: integer
+      created_at:
+        type: string
+      id:
+        type: integer
+      menu_id:
+        type: integer
+      updated_at:
+        type: string
+    type: object
+  model.CanteenMenuData:
+    properties:
+      canteen_id:
+        type: integer
+      menu_id:
+        type: integer
+    type: object
+  model.CanteenMenuDetail:
+    properties:
+      canteen_name:
+        type: string
+      menu:
+        items:
+          $ref: '#/definitions/model.Menu'
+        type: array
+    type: object
+  model.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  model.Menu:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      image_path:
+        type: string
+      name:
+        type: string
+      price:
+        type: integer
+      stock:
+        type: integer
+      updated_at:
+        type: string
+    type: object
+  model.MenuData:
+    properties:
+      image_path:
+        type: string
+      name:
+        type: string
+      price:
+        type: integer
+      stock:
+        type: integer
+    type: object
+  model.SuccessResponse:
+    properties:
+      message:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  model.UserAuthResponse:
+    properties:
+      access_token:
+        type: string
+      username:
+        type: string
+    type: object
+  model.UserCredential:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+host: canteen-api.up.railway.app
+info:
+  contact: {}
+  description: |-
+    This is a documentation of Canteen API.
+    Token can be obtained from /api/v1/login and/or /api/v1/register.
+  title: Canteen API
+  version: "1.00"
+paths:
+  /canteen-menus:
+    get:
+      description: Get All list of Canteen with the Menu
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.CanteenMenuDetail'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Get All Canteen Menu
+      tags:
+      - Canteen Menu
+    post:
+      consumes:
+      - application/json
+      description: Link Menu to Canteen
+      parameters:
+      - description: Canteen Menu
+        in: body
+        name: CanteenMenu
+        required: true
+        schema:
+          $ref: '#/definitions/model.CanteenMenuData'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CanteenMenu'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      security:
+      - Authorization: []
+      summary: Create Canteen Menu
+      tags:
+      - Canteen Menu
+  /canteen-menus/{id}:
+    delete:
+      description: Remove Relation from Menu to Canteen
+      parameters:
+      - description: CanteenMenu ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      security:
+      - Authorization: []
+      summary: Remove Canteen Menu
+      tags:
+      - Canteen Menu
+    get:
+      description: Get Canteen Menu by Canteen ID
+      parameters:
+      - description: Canteen ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.CanteenMenu'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Get Canteen Menu by Cantten ID
+      tags:
+      - Canteen Menu
+    put:
+      description: Update Relation
+      parameters:
+      - description: CanteenMenu ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Canteen Menu
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/model.CanteenMenuData'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CanteenMenu'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      security:
+      - Authorization: []
+      summary: Update Canteen Menu
+      tags:
+      - Canteen Menu
+  /canteens:
+    get:
+      description: Get all canteen
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Canteen'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Get all canteen
+      tags:
+      - Canteen
+    post:
+      consumes:
+      - application/json
+      description: Create Canteen
+      parameters:
+      - description: Canteen
+        in: body
+        name: Canteen
+        required: true
+        schema:
+          $ref: '#/definitions/model.CanteenData'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      security:
+      - Authorization: []
+      summary: Create Canteen
+      tags:
+      - Canteen
+  /canteens/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Remove a canteen from database
+      parameters:
+      - description: Canteen id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      security:
+      - Authorization: []
+      summary: Delete canteen
+      tags:
+      - Canteen
+    put:
+      consumes:
+      - application/json
+      description: Update canteen
+      parameters:
+      - description: Canteen id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Canteen
+        in: body
+        name: Canteen
+        required: true
+        schema:
+          $ref: '#/definitions/model.CanteenData'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Canteen'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      security:
+      - BearerAuth: []
+      - Authorization: []
+      summary: Update canteen
+      tags:
+      - Canteen
+  /canteens/seed/{location}:
+    get:
+      description: |
+        Adding 1 Canteen to Database from Third Prty API (YELP API)
+      parameters:
+      - description: 'Canteen location (ex. : New York, Singapore)'
+        in: path
+        name: location
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.Canteen'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      security:
+      - Authorization: []
+      summary: Seed Canteen Database
+      tags:
+      - Canteen
+  /menus:
+    get:
+      description: Get All Menu from database
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Menu'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Get All Menu
+      tags:
+      - Menu
+    post:
+      consumes:
+      - application/json
+      description: Manually insert menu to database
+      parameters:
+      - description: Menu
+        in: body
+        name: Menu
+        required: true
+        schema:
+          $ref: '#/definitions/model.MenuData'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.MenuData'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      security:
+      - Authorization: []
+      summary: Create Menu
+      tags:
+      - Menu
+  /menus/{id}:
+    delete:
+      parameters:
+      - description: Menu id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      security:
+      - Authorization: []
+      summary: Delete Menu
+      tags:
+      - Menu
+    get:
+      description: Menu Details
+      parameters:
+      - description: Menu id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Menu'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Get Menu
+      tags:
+      - Menu
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Menu id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Menu
+        in: body
+        name: Menu
+        required: true
+        schema:
+          $ref: '#/definitions/model.MenuData'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.MenuData'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      security:
+      - Authorization: []
+      summary: Update Menu
+      tags:
+      - Menu
+  /users/login:
+    post:
+      consumes:
+      - application/json
+      description: Logs in a user and returns an access token
+      parameters:
+      - description: User credentials
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/model.UserCredential'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.UserAuthResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Perform user login
+      tags:
+      - User
+  /users/register:
+    post:
+      consumes:
+      - application/json
+      description: Register a user and returns an access token
+      parameters:
+      - description: User credentials
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/model.UserCredential'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.UserAuthResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Perform user register
+      tags:
+      - User
+schemes:
+- https
+- http
+securityDefinitions:
+  Authorization:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
